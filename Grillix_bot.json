@@ -1,0 +1,592 @@
+{
+  "name": "Grillix_bot",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        208,
+        400
+      ],
+      "id": "fbd30918-4667-400d-8048-de1ecda8587c",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "PG3uw5QVKKtYOTKD",
+          "name": "Supabase account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        464
+      ],
+      "id": "b93788b9-2dc0-4de8-b350-53e2c3e87de2",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "xIQkVwboXV31UgbH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json[\"messages\"][0][\"text\"][\"body\"] }}\n",
+        "options": {
+          "systemMessage": "=<Agent instructions>\n\n<Role>\n\n<Name>Grillix WhatsApp Bot</Name>\n\n\n<Description>\n\nYou are a friendly, helpful, and intelligent WhatsApp assistant for Grillix Restaurant.\nYour job is to chat naturally with customers, answer menu questions, and take delivery or pickup orders.\n\nYou have access to:\n- Supabase Vector Store → to search and describe menu items and prices.\n\n- Airtable → to remember returning customers (name, phone, address, and last order).\n\n- WhatsApp → to send order notifications to the admin.\n\n- Most customers prefer delivery. Always sound polite, concise, and human.\n\n</Description>\n\n</Role>\n\n<Goal>\n\n<primary>\n\nYour purpose is to help customers easily place orders for delivery or pickup.\n\nWhen an order is confirmed:\n-save order details in Airtable,\n- send a message to the admin via WhatsApp,\n\n</primary>\n\n</Goal>\n\n<Knowledge Handling>\n\nUse Supabase Vector Store to find menu items, fix spelling errors, and confirm prices.\nIf an item is not found, suggest similar ones.\nAlways confirm the item, quantity, and delivery details before finalizing any order.\n\n</Knowledge Handling>\n\n<Memory Management>\n\nUse Airtable to identify returning customers using their WhatsApp number or name.\nWhen a returning customer is found, greet them by name and confirm saved details.\nFor new customers, collect their name, phone, and address before confirming.\nEvery confirmed order must be saved as a new Airtable record.\n\n</Memory Management>\n\n<admin notification>\n\n After saving the record in Airtable, send order details to the admin via WhatsApp.\n\n</admin notification>\n\n<Instructions>\n\n <instruction1>When a message arrives, first check Airtable for the user by WhatsApp number or name.</instruction1>\n\n <instruction2>If returning, greet them by name and confirm their last order and delivery address.</instruction2>\n\n <instruction3>If new, guide them through the menu and collect required info (name, phone, address, and order).</instruction3>\n\n <instruction4>Always confirm the order details before finalizing.</instruction4>\n\n <instruction5>Use Supabase Vector Store for menu items and prices.</instruction5>\n\n <instruction6>After confirming an order, save the record in Airtable and also send order details to the admin via WhatsApp.</instruction6>\n\n <instruction7>Sound natural and human. Avoid robotic tone or repetitive phrases.</instruction7>\n\n</Instructions>\n\n\n</Agent instructions>\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1168,
+        32
+      ],
+      "id": "c94c5916-68c5-4927-bb32-5d9865126016",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "retrieve menu items",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "topK": 2,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1264,
+        256
+      ],
+      "id": "af263cd0-45b1-461e-b9d9-5d7fdc77a29f",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "PG3uw5QVKKtYOTKD",
+          "name": "Supabase account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json[\"contacts\"] && $json[\"contacts\"][0] ? $json[\"contacts\"][0][\"wa_id\"] : $json[\"messages\"][0][\"from\"] }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1136,
+        256
+      ],
+      "id": "cd098728-27ec-4de3-a9aa-b138af3a9439",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appw1G0LzxUVrtnyK",
+          "mode": "list",
+          "cachedResultName": "Grillix",
+          "cachedResultUrl": "https://airtable.com/appw1G0LzxUVrtnyK"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblcOXV4YZEBPjhUS",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appw1G0LzxUVrtnyK/tblcOXV4YZEBPjhUS"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Name', ``, 'string') }}",
+            "address": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('address', ``, 'string') }}",
+            "phone number": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('phone_number', ``, 'string') }}",
+            "last_order": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('last_order', ``, 'string') }}",
+            "user_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('user_id', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "address",
+              "displayName": "address",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "phone number",
+              "displayName": "phone number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "last_order",
+              "displayName": "last_order",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "created",
+              "displayName": "created",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        1552,
+        256
+      ],
+      "id": "03fec553-6099-4231-bbd2-bfa8da7e8bee",
+      "name": "Save customers record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "kNdW3Dz6CnAgAwDf",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appw1G0LzxUVrtnyK",
+          "mode": "list",
+          "cachedResultName": "Grillix",
+          "cachedResultUrl": "https://airtable.com/appw1G0LzxUVrtnyK"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblcOXV4YZEBPjhUS",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appw1G0LzxUVrtnyK/tblcOXV4YZEBPjhUS"
+        },
+        "filterByFormula": "=({Name}='waleed')",
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "created"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        272,
+        112
+      ],
+      "id": "61d08336-f2e8-4913-95c4-01669998b94c",
+      "name": "Get memories",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "kNdW3Dz6CnAgAwDf",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        560,
+        112
+      ],
+      "id": "6ca3d6d6-f8f0-4ad1-b997-b69924630998",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        784,
+        32
+      ],
+      "id": "026529f1-f141-484d-b9af-8ad151c5003b",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        32
+      ],
+      "id": "1b38b1a6-a4eb-4b73-ae79-78c2433f0479",
+      "name": "WhatsApp Trigger",
+      "webhookId": "dcc2b7c4-0afa-4484-b1dd-fa3576639d54",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "BAQuFqTXFmSUV9Jg",
+          "name": "WhatsApp OAuth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1008,
+        256
+      ],
+      "id": "e6188b40-96dd-405b-a1dc-18b797145126",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "xIQkVwboXV31UgbH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"menu\": [\n    {\n      \"category\": \"BURGERS\",\n      \"items\": [\n        { \"name\": \"Zinger Burger\", \"full_price\": 599, \"member_price\": 449 },\n        { \"name\": \"Patty Burger\", \"full_price\": 449, \"member_price\": 349 },\n        { \"name\": \"Grilled Burger\", \"full_price\": 599, \"member_price\": 449 },\n        { \"name\": \"Beef Burger\", \"full_price\": 599, \"member_price\": 449 },\n        { \"name\": \"Mighty Burger\", \"full_price\": 849, \"member_price\": 699 },\n        { \"name\": \"Lava Special Burger\", \"full_price\": 899, \"member_price\": 799 },\n        { \"name\": \"Fish Burger\", \"full_price\": 599, \"member_price\": 499 },\n        { \"name\": \"Fish Grilled Burger\", \"full_price\": 699, \"member_price\": 599 }\n      ]\n    },\n    {\n      \"category\": \"CRISPY CHICKEN\",\n      \"items\": [\n        { \"name\": \"1 Chicken Piece\", \"price\": 260 },\n        { \"name\": \"2 Chicken Pieces\", \"price\": 499 },\n        { \"name\": \"3 Chicken Pieces\", \"price\": 799 },\n        { \"name\": \"6 Nuggets\", \"price\": 399 },\n        { \"name\": \"6 Crispy Wings\", \"price\": 399 },\n        { \"name\": \"6 Garlic Wings\", \"price\": 399 },\n        { \"name\": \"6 Bar B Q Wings\", \"price\": 399 },\n        { \"name\": \"6 Peri Peri Wings\", \"price\": 499 }\n      ]\n    },\n    {\n      \"category\": \"SANDWICH\",\n      \"items\": [\n        { \"name\": \"Club Sandwich\", \"price\": 499 },\n        { \"name\": \"Grilled Sandwich\", \"price\": 399 }\n      ]\n    },\n    {\n      \"category\": \"WRAPS\",\n      \"items\": [\n        { \"name\": \"Arabic Wrap\", \"full_price\": 599, \"member_price\": 449 },\n        { \"name\": \"Twister\", \"full_price\": 449, \"member_price\": 349 }\n      ]\n    },\n    {\n      \"category\": \"BEHARI ROLLS\",\n      \"items\": [\n        { \"name\": \"2 Pcs Chp Roll\", \"full_price\": 799, \"member_price\": 599 },\n        { \"name\": \"MPC Spl Roll\", \"full_price\": 799, \"member_price\": 599 },\n        { \"name\": \"Chicken Paratha Roll\", \"full_price\": 399, \"member_price\": 299 },\n        { \"name\": \"Zinger Paratha Roll\", \"full_price\": 449, \"member_price\": 349 }\n      ]\n    },\n    {\n      \"category\": \"SHAWARMA\",\n      \"items\": [\n        { \"name\": \"Chicken Shawarma\", \"full_price\": 399, \"member_price\": 299 },\n        { \"name\": \"Vegetable Shawarma\", \"full_price\": 399, \"member_price\": 249 },\n        { \"name\": \"Zinger Shawarma\", \"full_price\": 499, \"member_price\": 399 }\n      ]\n    },\n    {\n      \"category\": \"PASTA\",\n      \"items\": [\n        { \"name\": \"Chicken Pasta\", \"price\": 799 },\n        { \"name\": \"Creamy Pasta\", \"price\": 799 },\n        { \"name\": \"Lasagne Pasta\", \"price\": 799 },\n        { \"name\": \"Alfredo Pasta\", \"price\": 899 }\n      ]\n    },\n    {\n      \"category\": \"FRIES\",\n      \"items\": [\n        { \"name\": \"Mayo Garlic Fries\", \"price\": 309 },\n        { \"name\": \"Loaded Fries\", \"price\": 309 },\n        { \"name\": \"French Fries Regular\", \"price\": 300 },\n        { \"name\": \"French Fries Medium\", \"price\": 300 },\n        { \"name\": \"French Fries Large\", \"price\": 400 }\n      ]\n    },\n    {\n      \"category\": \"STEAKS\",\n      \"items\": [\n        { \"name\": \"Cheese Steak\", \"price\": 1199 },\n        { \"name\": \"Black Pepper Steak\", \"price\": 1199 },\n        { \"name\": \"Tandoori Steak\", \"price\": 1399 }\n      ]\n    },\n    {\n      \"category\": \"SIGNATURE PIZZA\",\n      \"items\": [\n        { \"name\": \"Grillix Special\", \"full_price\": 1099, \"member_price\": 949 },\n        { \"name\": \"Crown Crust\", \"full_price\": 1199, \"member_price\": 999 },\n        { \"name\": \"Behari Kabab\", \"full_price\": 1099, \"member_price\": 949 },\n        { \"name\": \"Kabab Crust\", \"full_price\": 1199, \"member_price\": 999 },\n        { \"name\": \"Stuffed Crust\", \"full_price\": 1299, \"member_price\": 1099 },\n        { \"name\": \"New Yorker\", \"full_price\": 1199, \"member_price\": 999 }\n      ]\n    },\n    {\n      \"category\": \"TRADITIONAL PIZZA\",\n      \"items\": [\n        { \"name\": \"Chicken Tikka B.B.Q\", \"price\": 799 },\n        { \"name\": \"Chicken Fajita\", \"price\": 799 },\n        { \"name\": \"Chicken Supreme\", \"price\": 799 },\n        { \"name\": \"Tandoori Pizza\", \"price\": 799 },\n        { \"name\": \"Chicken Achar Special\", \"price\": 799 },\n        { \"name\": \"Pepperoni Hot\", \"price\": 799 },\n        { \"name\": \"Veggie Feast\", \"price\": 799 }\n      ]\n    },\n    {\n      \"category\": \"LASAGNE\",\n      \"items\": [\n        { \"name\": \"Regular\", \"full_price\": 999, \"member_price\": 799 },\n        { \"name\": \"Large\", \"full_price\": 1399, \"member_price\": 1099 }\n      ]\n    },\n    {\n      \"category\": \"ARABIAN BEAST\",\n      \"items\": [\n        { \"name\": \"Regular\", \"full_price\": 1099, \"member_price\": 899 },\n        { \"name\": \"Large\", \"full_price\": 1499, \"member_price\": 1199 }\n      ]\n    },\n    {\n      \"category\": \"MALAI BOTI\",\n      \"items\": [\n        { \"name\": \"Regular\", \"full_price\": 999, \"member_price\": 799 },\n        { \"name\": \"Large\", \"full_price\": 1399, \"member_price\": 1099 }\n      ]\n    },\n    {\n      \"category\": \"NEW ARRIVAL PIZZAS\",\n      \"items\": [\n        { \"name\": \"Matka Pizza\", \"price\": 999 }\n      ]\n    },\n    {\n      \"category\": \"GRILLIX SPECIAL DEALS\",\n      \"items\": [\n        { \"name\": \"DEAL 1\", \"price\": 749, \"includes\": \"1 Zinger Burger, 1 Regular Fries, 345ml Drink\" },\n        { \"name\": \"DEAL 2\", \"price\": 749, \"includes\": \"1 Chicken Burger, 1 Regular Fries, 345ml Drink\" },\n        { \"name\": \"DEAL 3\", \"price\": 1499, \"includes\": \"1 Chicken Tikka, 1 Regular Pizza, 1 Zinger Burger, 1 Regular Fries, 500ml Drink\" },\n        { \"name\": \"DEAL 4\", \"price\": 1699, \"includes\": \"5 Chicken Pieces, 1 Medium Fries, 1.5 Ltr Drink\" },\n        { \"name\": \"DEAL 5\", \"price\": 1749, \"includes\": \"6 Chicken Shawarma, 6 Nuggets, 1 Regular Fries, 1 Ltr Drink\" },\n        { \"name\": \"DEAL 6\", \"price\": 2099, \"includes\": \"2 Behari Roll, 6 Hot Wings, 1 Regular Fries, 1 Ltr Drink\" },\n        { \"name\": \"DEAL 7\", \"price\": 2599, \"includes\": \"1 Chicken Supreme, 1 Medium Pizza, 2 Zinger Burger, 1 Medium Fries, 1 Ltr Drink\" },\n        { \"name\": \"DEAL 8\", \"price\": 2599, \"includes\": \"2 Chicken Burger, 2 Zinger Burger, 10 Hot Wings, 1 Medium Fries, 1 Ltr Drink\" },\n        { \"name\": \"DEAL 9\", \"price\": 3099, \"includes\": \"1 Chicken Tikka, 1 Large Pizza, 8 Hot Wings, 1 Medium Fries, 1.5 Ltr Drink\" },\n        { \"name\": \"DEAL 10\", \"price\": 3499, \"includes\": \"5 Zinger Burger, 1 Medium Pizza, 1.5 Ltr Drink\" },\n        { \"name\": \"DEAL 11\", \"price\": 3799, \"includes\": \"1 Chicken Tikka, 1 Large Pizza, 2 Zinger Burger, 3 Chicken Pieces, 1.5 Ltr Drink\" },\n        { \"name\": \"DEAL 12\", \"price\": 4399, \"includes\": \"1 Chicken Tikka Large Pizza, 3 Zinger Burger, 3 Paratha Roll, 1 Large Fries, 1 Ltr Drink\" }\n      ]\n    },\n    {\n      \"category\": \"GRILLIX SUPER FAMILY DEALS\",\n      \"items\": [\n        { \"name\": \"SUPER DEAL 1\", \"price\": 2249, \"includes\": \"3 Chicken Tikka Medium Pizza, 1.5 Ltr Drink\" },\n        { \"name\": \"SUPER DEAL 2\", \"price\": 2899, \"includes\": \"3 Chicken Tikka Medium Pizza, 1.5 Ltr Drink\" },\n        { \"name\": \"SUPER DEAL 3\", \"price\": 3599, \"includes\": \"3 Chicken Tikka Large Pizza, 1.5 Ltr Drink\" },\n        { \"name\": \"SUPER DEAL 4\", \"price\": 4999, \"includes\": \"3 Chicken Tikka X Large Pizza, 1 Ltr Drink\" }\n      ]\n    },\n    {\n      \"category\": \"PIZZA DEALS\",\n      \"items\": [\n        { \"name\": \"PIZZA DEAL 1\", \"price\": 1199, \"includes\": \"2 Chicken Tikka, Regular Pizza, 500ml Drink\" },\n        { \"name\": \"PIZZA DEAL 2\", \"price\": 2199, \"includes\": \"2 Chicken Tikka, Medium Pizza, 1 Ltr Drink\" },\n        { \"name\": \"PIZZA DEAL 3\", \"price\": 2899, \"includes\": \"2 Chicken Tikka, Large Pizza, 1.5 Ltr Drink\" },\n        { \"name\": \"PIZZA DEAL 4\", \"price\": 3599, \"includes\": \"2 Chicken Tikka, X Large Pizza, 1.5 Ltr Drink\" }\n      ]\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        400
+      ],
+      "id": "10c26453-3aef-47e3-b954-e07656820c3c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        624
+      ],
+      "id": "d31fad14-f6eb-468e-b49d-e69cd73dbeea",
+      "name": "Default Data Loader1"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "831661066699445",
+        "recipientPhoneNumber": "+923085000678",
+        "textBody": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        32
+      ],
+      "id": "082e1ff7-11a2-4752-8361-f923cc4e4d2c",
+      "name": "customers",
+      "webhookId": "25e06942-453d-4f38-a0a7-6f1f8f7b7589",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "e0OMLipNt5SA6YvS",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "=831661066699445",
+        "recipientPhoneNumber": "+923085000678",
+        "textBody": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text_Body', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTool",
+      "typeVersion": 1.1,
+      "position": [
+        1488,
+        400
+      ],
+      "id": "a8476d6d-847e-4a10-87ad-2f17b810f26f",
+      "name": "Send message in WhatsApp Business Cloud",
+      "webhookId": "3b84b4dc-fc8f-44ae-bbcf-302afdffd0d2",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "e0OMLipNt5SA6YvS",
+          "name": "WhatsApp account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save customers record": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get memories": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get memories",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "customers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader1": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "customers": {
+      "main": [
+        []
+      ]
+    },
+    "Send message in WhatsApp Business Cloud": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "948cd0ff-fe1c-4efd-9667-71b1e6529991",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2ac8acc26e8beb3ac1fc96134a8e207cf8e452089009ea140413703ec790c779"
+  },
+  "id": "FOHSNsZLr1mTdp1l",
+  "tags": []
+}
