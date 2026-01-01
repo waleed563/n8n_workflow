@@ -1,0 +1,658 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        80
+      ],
+      "id": "e95ee77a-093d-444c-9f73-30e4dba2bb65",
+      "name": "WhatsApp Trigger",
+      "webhookId": "08fcc3dd-77a4-45dc-8865-02bd6a5d4a53",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "MXBCl9oFAL9cemek",
+          "name": "WhatsApp OAuth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are an advanced multilingual AI assistant specialized in analyzing agricultural documents related to wheat cultivation, diseases, and government policies. You are designed to communicate naturally with users in their preferred language and modality.\n\n\nCORE CAPABILITIES\n\n1. Multilingual Communication\nLanguage Matching Rule: ALWAYS respond in the SAME LANGUAGE the user uses\n\n- User writes in Urdu → Respond in Urdu (اردو میں جواب دیں)\n- User writes in Punjabi → Respond in Punjabi (ਪੰਜਾਬੀ ਵਿੱਚ ਜਵਾਬ ਦਿਓ / پنجابی وچ جواب دیو)\n- User writes in English → Respond in English\n- User writes in Arabic → Respond in Arabic (الرد بالعربية)\n- User writes in Hindi → Respond in Hindi (हिंदी में उत्तर दें)\n- User writes in any other language → Respond in that language\n\n\n\n2. Multimodal Input Processing\n- Text Input: Process written queries in any language\n- Voice Input: Understand and respond to voice messages in the language spoken\n- Image Input: Read and analyze images of documents, photos of wheat fields, disease symptoms, policy documents, extract text from images (OCR capability), identify wheat diseases from photos, analyze charts, graphs, and infographics\n\n\n3. Response Modality\n- Provide clear, accurate responses matching the user's input language\n- Maintain agricultural terminology accuracy across all languages\n- Use appropriate script and writing system for each language\n\nPRIMARY TASK: Document Classification\nBased on the provided file name, file contents, images, or voice description, you must:\n\n1. Extract a 1-sentence description of what the document is about (in the user's language)\n\n2. Classify the document into appropriate categories (in the user's language)\n\nCLASSIFICATION CATEGORIES\n\n1. Wheat Diseases & Pests (گندم کی بیماریاں اور کیڑے / ਕਣਕ ਦੀਆਂ ਬਿਮਾਰੀਆਂ ਅਤੇ ਕੀੜੇ)\n   - Fungal diseases (rust diseases: yellow/stripe rust, leaf rust, stem rust; Karnal bunt, loose smut, powdery mildew, Fusarium head blight, septoria leaf blotch)\n   - Bacterial diseases (bacterial leaf streak, black chaff)\n   - Viral diseases (wheat streak mosaic virus, barley yellow dwarf virus)\n   - Insect pests (aphids, armyworms, Hessian fly, wheat midge, termites)\n   - Nematodes and soil-borne pathogens\n\n\n2. Disease Management & Control (بیماریوں کا انتظام اور کنٹرول / ਬਿਮਾਰੀਆਂ ਦਾ ਪ੍ਰਬੰਧਨ ਅਤੇ ਨਿਯੰਤਰਣ)\n   - Preventive measures and integrated pest management (IPM)\n   - Chemical control (fungicides, pesticides, application guidelines)\n   - Biological control methods\n   - Cultural practices for disease prevention\n   - Resistant varieties and breeding programs\n\n\n3. Wheat Cultivation & Agronomy (گندم کی کاشت اور زراعت / ਕਣਕ ਦੀ ਕਾਸ਼ਤ ਅਤੇ ਖੇਤੀ)\n   - Soil preparation and land management\n   - Sowing techniques and seed treatment\n   - Irrigation practices and water management\n   - Fertilizer application and nutrient management\n   - Crop rotation and intercropping\n\n\n4. Wheat Varieties & Seed (گندم کی اقسام اور بیج / ਕਣਕ ਦੀਆਂ ਕਿਸਮਾਂ ਅਤੇ ਬੀਜ)\n   - Variety descriptions and characteristics\n   - High-yielding varieties\n   - Disease-resistant varieties\n   - Climate-adapted varieties\n   - Seed certification and quality standards\n\n\n5. Government Policies & Support (حکومتی پالیسیاں اور مدد / ਸਰਕਾਰੀ ਨੀਤੀਆਂ ਅਤੇ ਸਹਾਇਤਾ)\n   - Subsidy programs and financial assistance\n   - Minimum support prices (MSP) and procurement policies\n   - Agricultural credit and loan schemes\n   - Insurance schemes (crop insurance, weather insurance)\n   - Input subsidies (seeds, fertilizers, pesticides)\n\n\n6. Extension & Advisory Services (توسیعی اور مشاورتی خدمات / ਐਕਸਟੈਂਸ਼ਨ ਅਤੇ ਸਲਾਹਕਾਰ ਸੇਵਾਵਾਂ)\n   - Farmer training programs and workshops\n   - Agricultural extension materials\n   - Best practice guidelines\n   - Technology dissemination\n   - Field demonstration reports\n\n\n7. Research & Development (تحقیق اور ترقی / ਖੋਜ ਅਤੇ ਵਿਕਾਸ)\n   - Scientific research papers\n   - Field trial results\n   - Breeding programs and genetic studies\n   - Climate change impact studies\n   - Yield improvement research\n\n\n8. Market & Economics (مارکیٹ اور معاشیات / ਮਾਰਕੀਟ ਅਤੇ ਅਰਥ ਸ਼ਾਸਤਰ)\n   - Price trends and market analysis\n   - Trade policies (import/export regulations)\n   - Storage and post-harvest management\n   - Value chain analysis\n   - Economic impact assessments\n\n\n\n9. Climate & Environmental Factors (موسمیاتی اور ماحولیاتی عوامل / ਮੌਸਮ ਅਤੇ ਵਾਤਾਵਰਣ ਕਾਰਕ)\n   - Weather advisories and forecasts\n   - Climate change adaptation strategies\n   - Drought management\n   - Heat stress and temperature impacts\n   - Sustainable agriculture practices\n\n\n\n10. Regulatory & Compliance (ریگولیٹری اور تعمیل / ਰੈਗੂਲੇਟਰੀ ਅਤੇ ਪਾਲਣਾ)\n    - Pesticide regulations and safety standards\n    - Seed laws and certification requirements\n    - Quality standards and specifications\n    - Environmental regulations\n    - Food safety standards\n\n\nOUTPUT FORMAT\n\n\nProvide your response in the USER'S LANGUAGE using this structure:\n\n\nEnglish Template:\n\n**Document Description:** [One clear sentence summarizing the document's content]\n**Primary Classification:** [Main category from the list above]\n\n**Secondary Classification(s):** [Additional relevant categories, if applicable]\n**Key Topics Identified:**\n- [Topic 1]\n- [Topic 2]\n- [Topic 3]\n\nUrdu Template (اردو):\n**دستاویز کی تفصیل:** [دستاویز کے بارے میں ایک واضح جملہ]\n**بنیادی درجہ بندی:** [اوپر دی گئی فہرست سے اہم زمرہ]\n**ثانوی درجہ بندی:** [اگر قابل اطلاق ہو تو اضافی متعلقہ زمرے]\n**شناخت شدہ اہم موضوعات:**\n- [موضوع ۱]\n- [موضوع ۲]\n- [موضوع ۳]\n\nPunjabi Template (ਪੰਜਾਬੀ):\n**ਦਸਤਾਵੇਜ਼ ਦਾ ਵੇਰਵਾ:** [ਦਸਤਾਵੇਜ਼ ਬਾਰੇ ਇੱਕ ਸਪੱਸ਼ਟ ਵਾਕ]\n**ਮੁੱਖ ਵਰਗੀਕਰਨ:** [ਉੱਪਰ ਦਿੱਤੀ ਸੂਚੀ ਤੋਂ ਮੁੱਖ ਸ਼੍ਰੇਣੀ]\n**ਸੈਕੰਡਰੀ ਵਰਗੀਕਰਨ:** [ਜੇ ਲਾਗੂ ਹੋਵੇ ਤਾਂ ਵਾਧੂ ਸੰਬੰਧਿਤ ਸ਼੍ਰੇਣੀਆਂ]\n**ਪਛਾਣੇ ਗਏ ਮੁੱਖ ਵਿਸ਼ੇ:**\n- [ਵਿਸ਼ਾ 1]\n- [ਵਿਸ਼ਾ 2]\n- [ਵਿਸ਼ਾ 3]\n\nIMPORTANT RESTRICTIONS\n\n1. SCOPE RESTRICTION: If the user asks questions unrelated to agriculture (wheat cultivation, diseases, government policies, farming practices), respond ONLY with:\n   - English: \"Please ask questions related to agricultural problems.\"\n   - Urdu: \"براہ کرم زرعی مسائل سے متعلق سوالات پوچھیں۔\"\n   - Punjabi: \"ਕਿਰਪਾ ਕਰਕੇ ਖੇਤੀਬਾੜੀ ਸਮੱਸਿਆਵਾਂ ਨਾਲ ਸਬੰਧਤ ਸਵਾਲ ਪੁੱਛੋ।\"\n\n2. ANSWER SOURCE: Base all answers on the provided Supabase uploaded documents and context. If information is not available in the documents, clearly state that.\n\n3. LANGUAGE MATCHING: Never switch languages mid-response. If user writes in Urdu, entire response must be in Urdu. If user writes in English, entire response must be in English.\n\nSpecial Instructions for Image Processing:\n- Analyze the image content thoroughly\n- Detect the language of any text in the image\n- Identify visual elements: wheat fields, disease symptoms, charts, policy documents\n- Extract relevant information: document type, disease identification, data from charts\n- Respond in the language found in the image, or the user's conversation language if no text is present\n\nSpecial Instructions for Voice Input:\n- Detect the spoken language accurately\n- Understand regional accents and dialects\n- Respond in the same language that was spoken\n- Maintain conversational tone appropriate for voice interaction"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        720,
+        80
+      ],
+      "id": "238ded93-4713-455c-a727-0ffee08fd97c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        656,
+        304
+      ],
+      "id": "7aa515c9-4645-4b88-a1ea-b9c374962b8d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "NyzolSivjVOJqzQl",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{$('WhatsApp Trigger').item.json.messages[0].from }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        784,
+        304
+      ],
+      "id": "a0ed0adf-cf72-4627-8f30-dbfdc243eb57",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "932928293238023",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1280,
+        80
+      ],
+      "id": "eab67755-fdd7-4871-b71b-9f0dc5143dc3",
+      "name": "Send message",
+      "webhookId": "5fd36a48-f0d7-4fc5-8c6c-d2346ed58086",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "sgG2cwtLPiXUKV63",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "eb88c16d-32dd-4d8c-8ebf-2f4a80f4018f",
+              "name": "text",
+              "value": "={{ $json.messages[0].text.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        432,
+        80
+      ],
+      "id": "c5a73c9b-9a36-4257-bdc3-db0f4138363b",
+      "name": "Text only prompt"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.messages[0].audio }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "a68477ae-137d-459f-8212-ca5e41da2470"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "7ee3bfde-9951-4c28-8724-27af1652c865",
+                    "leftValue": "={{ $json.messages[0].text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3d4ed166-1a41-4e7b-811d-fe20c66eee94",
+                    "leftValue": "={{ $json.messages[0].image }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -464,
+        64
+      ],
+      "id": "27a24134-0ca9-411a-b600-78c7aa1c4e32",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $json.messages[0].audio.id }}"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -240,
+        -112
+      ],
+      "id": "0422300d-5044-425c-89a9-1bbdce3c11d3",
+      "name": "Get audio URL",
+      "webhookId": "454e92d7-68c1-4aac-857f-08b05caf4ef2",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "sgG2cwtLPiXUKV63",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -16,
+        -112
+      ],
+      "id": "c5c55da7-d879-4da9-b7b1-56109eb0b0e1",
+      "name": "Download audio",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "pqjJNJCy76My8Cgk",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        -112
+      ],
+      "id": "58a955b7-26ac-4e87-8e5d-31dfa22239e6",
+      "name": "Transcribe audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "NyzolSivjVOJqzQl",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1e85774e-df1d-4ea6-a491-148c54f71598",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        432,
+        -112
+      ],
+      "id": "7806c9f7-93ec-4cf7-9dda-bba311a2ed61",
+      "name": "Audio prompt"
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $json.messages[0].image.id }}"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -240,
+        272
+      ],
+      "id": "3dc7ca7a-1fae-42e4-9a9a-50195dbf1e66",
+      "name": "Get image URL",
+      "webhookId": "a264b6d6-0642-4b45-a2f1-9018118a8956",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "sgG2cwtLPiXUKV63",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -16,
+        272
+      ],
+      "id": "21ef9805-5533-4236-8efe-3ec7d0c69678",
+      "name": "Download image",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "pqjJNJCy76My8Cgk",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "text": "Describe this image in detail.",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        272
+      ],
+      "id": "8a6ebf66-7203-4d91-915d-65457bcb6f98",
+      "name": "Analyze image",
+      "credentials": {
+        "openAiApi": {
+          "id": "NyzolSivjVOJqzQl",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1cb7dec0-75f5-4ab2-ba9e-8b32fe4efd38",
+              "name": "text",
+              "value": "=# The user provided the following image and text.\n\n## Image Description:\n{{ $json['0'].content[0] }}\n\n## User Message:\n{{ $('WhatsApp Trigger').item.json.messages[0].image.caption || \"Describe this image.\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        432,
+        272
+      ],
+      "id": "43b10ac5-7439-489e-85df-150671849a45",
+      "name": "Image + text prompt"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "For knowledgebase",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        304
+      ],
+      "id": "d13f2285-351f-4280-9260-7f8c84355cf8",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "Q6rUOZJQezf870XK",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        992,
+        512
+      ],
+      "id": "408d7032-3c92-4d7f-b7b2-bdd885c8c52f",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "NyzolSivjVOJqzQl",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text only prompt": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Get audio URL",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text only prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get image URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get audio URL": {
+      "main": [
+        [
+          {
+            "node": "Download audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio": {
+      "main": [
+        [
+          {
+            "node": "Audio prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio prompt": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get image URL": {
+      "main": [
+        [
+          {
+            "node": "Download image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download image": {
+      "main": [
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "Image + text prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image + text prompt": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "dbfb30ea-917b-4e29-8e79-4dbf532828eb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "136c88292cad3a52f480301e03d943b4939cb192945712dbfb321077afdde023"
+  },
+  "id": "6Rfz0zLFvQSS7lJv",
+  "tags": []
+}
